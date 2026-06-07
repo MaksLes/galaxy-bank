@@ -9,7 +9,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // ── 1. Budowanie kurierów przez Builder ──────────────────────────────
+        //  Budowanie kurierów przez Builder
         SpaceCourier jan = SpaceCourier.builder()
                 .firstName("Jan").lastName("Kowalski")
                 .rating(5).employeeId("EMP-001").build();
@@ -26,21 +26,21 @@ public class Main {
                 .firstName("Anonim").lastName(null)
                 .rating(2).employeeId("EMP-004").build();
 
-        // ── 2. Sortowanie naturalne (Comparable) — malejąco po ratingu ───────
+        // Sortowanie naturalne (Comparable) - malejąco po ratingu
         List<SpaceCourier> byRating = new ArrayList<>(List.of(jan, anna, piotr, noName));
         Collections.sort(byRating);
         System.out.println("Sortowanie po ocenie (malejąco):");
         byRating.forEach(c -> System.out.printf("  %s %s — rating: %d%n",
                 c.getFirstName(), c.getLastName(), c.getRating()));
 
-        // ── 3. Sortowanie przez Comparator — alfabetycznie, null na końcu ────
+        // Sortowanie przez Comparator — alfabetycznie, null na końcu
         List<SpaceCourier> byName = new ArrayList<>(List.of(jan, anna, piotr, noName));
         byName.sort(SpaceCourier.BY_NAME_COMPARATOR);
         System.out.println("\nSortowanie alfabetyczne (nullsLast):");
         byName.forEach(c -> System.out.printf("  %s %s%n",
                 c.getLastName(), c.getFirstName()));
 
-        // ── 4. Kalkulator kosztów + Text Block ───────────────────────────────
+        //  Kalkulator kosztów + Text Block
         ShippingCostCalculator calculator = new ShippingCostCalculator();
 
         DeliveryMethod standard = new StandardDelivery(
@@ -54,17 +54,17 @@ public class Main {
         calculator.printSummary(jan, standard, standardCost);
         calculator.printSummary(anna, express, expressCost);
 
-        // ── 5. Przydział misji przez DeliveryLogistics ────────────────────────
+        // Przydział misji przez DeliveryLogistics
         AuthorizationService auth = new AuthorizationService();
         DeliveryLogistics logistics = new DeliveryLogistics(auth);
 
-        // Kurier z rating=5 → przejdzie filtr
+        // Kurier z rating=5 -> przejdzie filtr
         logistics.assignMission(jan, standard);
 
-        // Kurier z rating=3 → nie przejdzie → orElseGet pobierze rezerwowego
+        // Kurier z rating=3 -> nie przejdzie -> orElseGet pobierze rezerwowego
         logistics.assignMission(anna, express);
 
-        // null → Optional.ofNullable(null) → orElseGet pobierze rezerwowego
+        // null -> Optional.ofNullable(null) -> orElseGet pobierze rezerwowego
         logistics.assignMission(null, express);
     }
 }
